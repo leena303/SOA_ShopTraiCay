@@ -1,0 +1,91 @@
+<div class="admin-layout">
+  <div class="content" style="width: 70pc;">
+    <div class="content-header" style="padding: 21px; margin-top: 1px;">
+      Quản lý danh mục
+    </div>
+    <div class="content-body">
+      <!-- PHẦN TÌM KIẾM & THÊM -->
+      <div [formGroup]="searchForm"
+        style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <input type="text" formControlName="keyword" placeholder="Tìm kiếm danh mục..." class="search-input" />
+        <button class="btn btn-add" (click)="addCategory()">+ Thêm danh mục mới</button>
+      </div>
+
+      <!-- PHẦN FORM SỬA/THÊM DANH MỤC (Reactive Form) -->
+      <form *ngIf="editMode" [formGroup]="categoryForm" class="form-edit-category" (ngSubmit)="saveCategory()">
+        <h3>{{ editingCategoryId == null ? 'Thêm danh mục' : 'Sửa danh mục' }}</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+          <label style="flex: 1 1 200px;">
+            Tên danh mục:
+            <input formControlName="name" type="text" />
+            <span *ngIf="categoryForm.get('name')?.invalid && categoryForm.get('name')?.touched"
+              style="color: #ef4444; font-size: 0.95em;">Tên không được để trống</span>
+          </label>
+          <label style="flex: 1 1 300px;">
+            Mô tả:
+            <textarea formControlName="description" rows="4" style="resize: vertical;"></textarea>
+          </label>
+        </div>
+        <div style="margin-top: 10px;">
+          <button class="btn btn-save" type="submit" [disabled]="categoryForm.invalid">Lưu</button>
+          <button class="btn btn-cancel" type="button" (click)="cancelEdit()">Hủy</button>
+        </div>
+      </form>
+      <!-- KẾT THÚC FORM -->
+
+
+      <!-- PHẦN XEM CHI TIẾT DANH MỤC (Reactive Form, disabled) -->
+      <form *ngIf="viewMode" [formGroup]="categoryForm" class="form-edit-category form-view-mode">
+        <h3>Chi tiết danh mục</h3>
+        <div style="display: flex; flex-wrap: wrap; gap: 16px;">
+          <label style="flex: 1 1 200px;">
+            <b>Tên danh mục:</b>
+            <input formControlName="name" type="text" />
+          </label>
+          <label style="flex: 1 1 300px;">
+            <b>Mô tả:</b>
+            <textarea formControlName="description" rows="4" style="resize: vertical;"></textarea>
+          </label>
+        </div>
+        <div style="margin-top: 10px;">
+          <button class="btn btn-cancel" type="button" (click)="closeView()">Đóng</button>
+        </div>
+      </form>
+
+      <!-- PHẦN BẢNG DANH MỤC -->
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tên danh mục</th>
+            <th>Mô tả</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+                <tbody>
+          <tr *ngFor="let category of pagedCategories">
+            <td>{{ category.category_id }}</td>
+            <td>{{ category.name }}</td>
+            <td>{{ category.description | slice:0:30 }}<span *ngIf="category.description.length > 30">...</span></td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-view" (click)="viewCategory(category)">Xem chi tiết</button>
+                <button class="btn btn-edit" (click)="editCategory(category)">Sửa</button>
+                <button class="btn btn-delete" (click)="deleteCategory(category.category_id)">Xóa</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- KẾT THÚC BẢNG -->
+
+      <!-- PHẦN PHÂN TRANG -->
+      <div class="pagination-container">
+        <button class="pagination-btn" (click)="page = page - 1" [disabled]="page === 1">Trước</button>
+        <span class="pagination-info">Trang {{page}} / {{totalPages}}</span>
+        <button class="pagination-btn" (click)="page = page + 1" [disabled]="page === totalPages">Sau</button>
+      </div>
+      <!-- KẾT THÚC PHÂN TRANG -->
+    </div>
+  </div>
+</div>

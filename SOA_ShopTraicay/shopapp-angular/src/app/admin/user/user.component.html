@@ -1,0 +1,212 @@
+<div class="admin-layout">
+  <div class="content">
+    <div class="content-header">
+      Quản lý người dùng
+    </div>
+    <div class="content-body">
+      <div class="search-container">
+        <input type="text" placeholder="Tìm kiếm người dùng..." [(ngModel)]="searchText" class="search-input">
+      </div>
+
+      <div style="margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
+        <button class="btn btn-add" (click)="addUser()">+ Thêm người dùng</button>
+        <button class="btn btn-add" (click)="fetchUsers()" style="margin-left: 10px;">🔄 Làm mới</button>
+      </div>
+
+      <!-- Loading indicator -->
+      <div *ngIf="loading" class="loading-indicator">
+        <p>Đang tải dữ liệu...</p>
+      </div>
+
+      <!-- Error message -->
+      <div *ngIf="error && !loading" class="error-message">
+        {{ error }}
+      </div>
+
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Tên đăng nhập</th>
+            <th>Email</th>
+            <th>Mật khẩu</th>
+            <th>Ngày tạo</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of filteredUsers">
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.email }}</td>
+            <td>••••••</td>
+            <td>{{ user.createdAt | date:'dd/MM/yyyy' }}</td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-view" (click)="viewUserDetail(user)">Chi tiết</button>
+                <button class="btn btn-edit" (click)="editUser(user)">Sửa</button>
+                <button class="btn btn-delete" (click)="deleteUser(user.id!)">Xóa</button>
+              </div>
+            </td>
+          </tr>
+          <tr *ngIf="filteredUsers.length === 0">
+            <td colspan="6" class="no-data">
+              Không có người dùng nào
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+  <!-- Modal chi tiết người dùng -->
+  <div *ngIf="selectedUser" class="user-detail-modal" (click)="closeUserDetail()">
+    <div class="user-detail-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Chi tiết người dùng</h3>
+        <button class="btn-close-modal" (click)="closeUserDetail()">×</button>
+      </div>
+      <div class="user-detail-body">
+        <div class="detail-section">
+          <div class="detail-item">
+            <span class="detail-label">ID:</span>
+            <span class="detail-value">{{ selectedUser.id }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Tên đăng nhập:</span>
+            <span class="detail-value">{{ selectedUser.username }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Email:</span>
+            <span class="detail-value">{{ selectedUser.email || 'Chưa có' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Vai trò:</span>
+            <span class="detail-value">{{ selectedUser.role || 'customer' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Trạng thái:</span>
+            <span class="detail-value status-badge" [ngClass]="{'status-active': selectedUser.status === 'active', 'status-inactive': selectedUser.status !== 'active'}">
+              {{ selectedUser.status || 'active' }}
+            </span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Địa chỉ:</span>
+            <span class="detail-value">{{ selectedUser.address || 'Chưa có' }}</span>
+          </div>
+          <div class="detail-item">
+            <span class="detail-label">Ngày tạo:</span>
+            <span class="detail-value">{{ selectedUser.createdAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+          <div class="detail-item" *ngIf="selectedUser.updatedAt">
+            <span class="detail-label">Ngày cập nhật:</span>
+            <span class="detail-value">{{ selectedUser.updatedAt | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-edit" (click)="editUserFromDetail()">Sửa</button>
+        <button class="btn btn-cancel" (click)="closeUserDetail()">Đóng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal thêm/sửa user -->
+  <div *ngIf="editMode && editingUser" class="user-detail-modal" (click)="cancelEdit()">
+    <div class="user-form-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>{{ editingUser.id ? 'Sửa người dùng' : 'Thêm người dùng mới' }}</h3>
+        <button class="btn-close-modal" (click)="cancelEdit()">×</button>
+      </div>
+      <form (ngSubmit)="saveUser($event)" class="user-form-body">
+        <div class="form-section">
+          <h4>Thông tin cơ bản</h4>
+          <div class="form-fields-grid">
+            <div class="form-field">
+              <label>
+                Tên đăng nhập <span class="required">*</span>:
+              </label>
+              <input 
+                type="text" 
+                [(ngModel)]="editingUser.username" 
+                name="username"
+                required
+                placeholder="Nhập tên đăng nhập"
+                class="form-control"
+              />
+            </div>
+            <div class="form-field">
+              <label>
+                Email <span class="required">*</span>:
+              </label>
+              <input 
+                type="email" 
+                [(ngModel)]="editingUser.email" 
+                name="email"
+                required
+                placeholder="Nhập email"
+                class="form-control"
+              />
+            </div>
+            <div class="form-field">
+              <label>
+                Mật khẩu {{ editingUser.id ? '(để trống nếu không đổi)' : '' }} <span *ngIf="!editingUser.id" class="required">*</span>:
+              </label>
+              <div class="password-input-wrapper">
+                <input 
+                  type="text" 
+                  [(ngModel)]="editingUser.password" 
+                  [type]="showPassword ? 'text' : 'password'"
+                  name="password"
+                  [required]="!editingUser.id"
+                  placeholder="Nhập mật khẩu"
+                  class="form-control password-input"
+                />
+                <button type="button" (click)="showPassword = !showPassword" class="password-toggle-btn">
+                  {{ showPassword ? '👁️' : '👁️‍🗨️' }}
+                </button>
+              </div>
+            </div>
+            <div class="form-field">
+              <label>
+                Vai trò:
+              </label>
+              <select [(ngModel)]="editingUser.role" name="role" class="form-control">
+                <option value="customer">Khách hàng</option>
+                <option value="admin">Quản trị viên</option>
+                <option value="staff">Nhân viên</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label>
+                Trạng thái:
+              </label>
+              <select [(ngModel)]="editingUser.status" name="status" class="form-control">
+                <option value="active">Hoạt động</option>
+                <option value="inactive">Không hoạt động</option>
+                <option value="suspended">Tạm khóa</option>
+              </select>
+            </div>
+            <div class="form-field full-width">
+              <label>
+                Địa chỉ:
+              </label>
+              <textarea 
+                [(ngModel)]="editingUser.address" 
+                name="address"
+                placeholder="Nhập địa chỉ (tùy chọn)"
+                class="form-control"
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-save">Lưu</button>
+          <button type="button" class="btn btn-cancel" (click)="cancelEdit()">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

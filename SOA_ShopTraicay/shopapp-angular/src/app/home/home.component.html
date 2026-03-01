@@ -1,0 +1,71 @@
+<div class="page-wrapper">
+  <app-header></app-header>
+
+  <div class="container">
+    <div class="intro-section">
+      <h1>🍎 Cửa hàng trái cây tươi ngon</h1>
+      <p>Chuyên cung cấp các loại trái cây tươi ngon, chất lượng cao</p>
+      <p>Giao hàng tận nơi - Đảm bảo chất lượng - Giá cả hợp lý</p>
+    </div>
+
+    <div class="search-box">
+      <input type="text" class="form-control search-input" placeholder="Tìm kiếm trái cây..." [(ngModel)]="searchText"
+        (input)="onSearch()">
+      <select class="form-control product-category" [(ngModel)]="selectedCategory" (change)="onCategoryChange()">
+        <option value="">Tất cả danh mục</option>
+        <option *ngFor="let cat of categories" [value]="cat">{{ cat }}</option>
+      </select>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4 col-md-6" *ngFor="let product of pagedProducts">
+        <div class="product-item" (click)="viewDetail(product)">
+          <img [src]="product.getFullImageUrl()" [alt]="product.name" class="product-image"
+            (click)="goToDetail(product.id)" style="cursor: pointer"
+            (error)="product.image = product.getDefaultImage()">
+          <div class="product-details-content">
+            <h3 class="product-name">{{product.name}}</h3>
+            <p class="product-description" *ngIf="product.description">{{product.description}}</p>
+            <p class="product-category" style="color: #4ade80; font-size: 0.9em;">
+              <i class="fas fa-tag"></i> {{product.category}}
+            </p>
+            <p class="product-price">Giá: {{product.getFormattedPrice()}}</p>
+            <p class="product-unit" style="color: #94a3b8; font-size: 0.85em;">
+              Đơn vị: {{product.unit || 'kg'}}
+            </p>
+            <p class="product-quantity" *ngIf="product.isInStock()" style="color: #4ade80; font-weight: bold;">
+              <i class="fas fa-check-circle"></i> Còn hàng: {{ +product.quantity! }} {{product.unit || 'kg'}}
+            </p>
+            <p class="product-quantity" *ngIf="!product.isInStock()"
+              style="color: #ef4444; font-weight: bold;">
+              <i class="fas fa-times-circle"></i> Hết hàng
+            </p>
+          </div>
+          <div class="product-actions">
+            <button class="btn btn-primary" 
+                    (click)="addToCart(product)" 
+                    [disabled]="!product.isInStock()">
+              <span *ngIf="product.isInStock()">Thêm vào giỏ hàng</span>
+              <span *ngIf="!product.isInStock()">Hết hàng</span>
+            </button>
+            <span class="space-x"></span>
+            <button class="btn btn-success" 
+                    (click)="buyNow(product)" 
+                    [disabled]="!product.isInStock()">
+              <span *ngIf="product.isInStock()">Mua ngay</span>
+              <span *ngIf="!product.isInStock()">Hết hàng</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pagination-container">
+      <button class="pagination-btn" (click)="goToPage(page - 1)" [disabled]="page === 1">Trước</button>
+      <span class="pagination-info">Trang {{page}} / {{totalPages}}</span>
+      <button class="pagination-btn" (click)="goToPage(page + 1)" [disabled]="page === totalPages">Sau</button>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>

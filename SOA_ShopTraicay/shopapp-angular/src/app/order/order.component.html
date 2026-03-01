@@ -1,0 +1,169 @@
+<app-header></app-header>
+<div class="container">
+  <div class="intro-section">
+    <h1>Xác nhận đơn hàng</h1>
+    <p>Kiểm tra lại giỏ hàng và tiến hành đặt hàng</p>
+  </div>
+
+  <!-- Cart and Order Form - Shown when orderPlaced is false -->
+  <div class="row" *ngIf="!orderPlaced">
+    <div class="col-md-12">
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col" class="text-start">Sản phẩm</th>
+            <th scope="col">Số lượng</th>
+            <th scope="col">Đơn giá</th>
+            <th scope="col">Tổng giá</th>
+            <th scope="col">Xóa</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cartItems">
+            <td>
+              <div class="product-info">
+                <img [src]="item.product.getFullImageUrl()"
+                     [alt]="item.product.name"
+                     class="product-image-order"
+                     (error)="item.product.image = item.product.getDefaultImage()">
+                <span class="product-name-order">{{item.product.name}}</span>
+              </div>
+            </td>
+            <td>
+              <div class="quantity-controls">
+                <button class="btn btn-sm btn-outline-secondary" 
+                        (click)="updateQuantity(item.product.id, item.quantity - 1)"
+                        [disabled]="item.quantity <= 1">-</button>
+                <span class="mx-2">{{item.quantity}}</span>
+                <button class="btn btn-sm btn-outline-secondary"
+                        (click)="updateQuantity(item.product.id, item.quantity + 1)"
+                        [disabled]="!item.product.isInStock() || item.quantity >= getProductMaxQuantity(item.product)">+</button>
+              </div>
+            </td>
+            <td>{{item.product.getFormattedPrice()}}</td>
+            <td>{{item.getFormattedTotalPrice()}}</td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="removeItem(item.product.id)">
+                <i class="fas fa-trash"></i>
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="text-end mt-3">
+        <h4>Tổng cộng: {{totalAmount | number }} VNĐ</h4>
+      </div>
+
+      <!-- Detailed Order Summary -->
+      <div class="order-summary mt-4">
+        <h4 class="product-header">Tóm tắt đơn hàng</h4>
+        <div class="summary-item">
+          <span>Tổng phụ:</span>
+          <span>{{ totalAmount | number }} VNĐ</span> <!-- totalAmount is currently subtotal -->
+        </div>
+        <!-- Discount Row (conditionally displayed if coupon applied) -->
+        <div class="summary-item" *ngIf="discountAmount > 0">
+          <span>Giảm giá:</span>
+          <span>- {{ discountAmount | number }} VNĐ</span>
+        </div>
+        <!-- Shipping Cost Row (placeholder) -->
+        <div class="summary-item">
+          <span>Phí vận chuyển:</span>
+          <span>{{ shippingCost | number }} VNĐ</span> <!-- Placeholder for shipping cost -->
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-item total">
+          <span>Tổng cộng:</span>
+          <span>{{ finalTotalAmount | number }} VNĐ</span> <!-- Final calculated total -->
+        </div>
+      </div>
+
+      <!-- Customer Information Section -->
+      <div class="shipping-info mt-4">
+        <h4 class="product-header">Thông tin khách hàng</h4>
+        <div class="form-group">
+          <label for="customerName" class="form-label">Họ và tên <span class="required">*</span></label>
+          <input type="text" class="form-control" id="customerName" [(ngModel)]="customer_name" 
+                 placeholder="Nhập họ và tên" required
+                 [class.is-invalid]="!customer_name && !orderPlaced">
+          <div class="invalid-feedback" *ngIf="!customer_name && !orderPlaced">Vui lòng nhập họ và tên</div>
+        </div>
+        <div class="form-group mt-3">
+          <label for="customerEmail" class="form-label">Email <span class="required">*</span></label>
+          <input type="email" class="form-control" id="customerEmail" [(ngModel)]="customer_email" 
+                 placeholder="example@email.com" required
+                 [class.is-invalid]="(!customer_email || !isValidEmail(customer_email)) && !orderPlaced">
+          <div class="invalid-feedback" *ngIf="!customer_email && !orderPlaced">Vui lòng nhập email</div>
+          <div class="invalid-feedback" *ngIf="customer_email && !isValidEmail(customer_email) && !orderPlaced">Email không hợp lệ</div>
+        </div>
+        <div class="form-group mt-3">
+          <label for="shippingAddress" class="form-label">Địa chỉ giao hàng <span class="required">*</span></label>
+          <textarea class="form-control" id="shippingAddress" [(ngModel)]="shipping_address" rows="3" 
+                    placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành phố" required
+                    [class.is-invalid]="!shipping_address && !orderPlaced"></textarea>
+          <div class="invalid-feedback" *ngIf="!shipping_address && !orderPlaced">Vui lòng nhập địa chỉ giao hàng</div>
+        </div>
+      </div>
+
+      <!-- Payment Method Section -->
+      <div class="payment-method mt-4">
+        <h4 class="product-header">Phương thức thanh toán</h4>
+        <div class="form-group">
+          <div class="form-check">
+            <input class="form-check-input" type="radio" name="paymentMethod" id="cashPayment" value="cash" [(ngModel)]="selectedPaymentMethod">
+            <label class="form-check-label" for="cashPayment">
+              <i class="fas fa-money-bill-wave"></i> Thanh toán khi nhận hàng (Tiền mặt)
+            </label>
+          </div>
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="radio" name="paymentMethod" id="bankTransferPayment" value="bank_transfer" [(ngModel)]="selectedPaymentMethod">
+            <label class="form-check-label" for="bankTransferPayment">
+              <i class="fas fa-university"></i> Chuyển khoản ngân hàng
+            </label>
+          </div>
+          <div class="form-check mt-2">
+            <input class="form-check-input" type="radio" name="paymentMethod" id="momoPayment" value="momo" [(ngModel)]="selectedPaymentMethod">
+            <label class="form-check-label" for="momoPayment">
+              <i class="fas fa-mobile-alt"></i> Ví điện tử (MoMo)
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ghi chú đơn hàng -->
+      <div class="mt-3">
+        <h4 class="product-header">Ghi chú đơn hàng (Tùy chọn)</h4>
+        <textarea class="form-control" rows="2" placeholder="Ví dụ: Giao hàng buổi sáng, để trước cửa..." 
+                  [(ngModel)]="orderNotes"></textarea>
+      </div>
+
+      <!-- Terms and Conditions Checkbox -->
+      <div class="form-group mt-3 form-check">
+        <input type="checkbox" class="form-check-input" id="agreeTerms" [(ngModel)]="agreeTerms" required>
+        <label class="form-check-label" for="agreeTerms">
+          Tôi đồng ý với các điều khoản và điều kiện
+        </label>
+        <!-- TODO: Add a link to the actual terms and conditions page -->
+      </div>
+
+      <div class="text-center mt-4">
+        <button class="btn btn-gradient" type="button" (click)="placeOrder()" [disabled]="!isOrderValid">Đặt hàng</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Successful Message - Shown when orderPlaced is true -->
+  <div class="row text-center" *ngIf="orderPlaced">
+    <div class="col-md-12">
+      <div class="order-success-message mt-5">
+        <h2><i class="fas fa-check-circle text-success"></i> Đặt hàng thành công!</h2>
+        <p>Cảm ơn bạn đã đặt hàng của chúng tôi.</p>
+        <p>Bạn có thể xem lại đơn hàng của mình trong lịch sử đặt hàng.</p>
+        <a class="btn btn-info me-3" (click)="viewOrderHistory()">Xem lịch sử đặt hàng</a>
+        <button class="btn btn-primary" (click)="continueShopping()">Tiếp tục mua sắm</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<app-footer></app-footer>

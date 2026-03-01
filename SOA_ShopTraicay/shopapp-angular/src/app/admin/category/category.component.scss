@@ -1,0 +1,393 @@
+/* Category Management - Modern Light Theme */
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background-color: #ffffff !important;
+  color: #1e293b;
+}
+
+.admin-layout {
+  display: flex;
+  height: 100vh;
+  background: #ffffff !important;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 240px;
+    color: #1e293b;
+    padding: 20px 0;
+    height: 100%;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border-right: 2px solid #e2e8f0;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-header {
+    padding: 0 20px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 2px solid #e2e8f0;
+    color: #1e293b;
+    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  margin: 4px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #64748b;
+  font-weight: 500;
+  
+  &:hover {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    color: #6366f1;
+    transform: translateX(4px);
+}
+
+  &.active {
+    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    font-weight: 600;
+  }
+}
+
+/* Content area */
+.content {
+    flex: 1;
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+    overflow-y: auto;
+}
+
+.content-header {
+    color: #1e293b !important;
+    padding: 0 20px 20px;
+    margin-top: -9px;
+    border-bottom: 2px solid #e2e8f0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.content-body {
+    padding: 20px;
+    background: #ffffff !important;
+}
+
+// Định dạng bảng danh mục giống product
+.product-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 18px;
+  background: #ffffff;
+  color: #1e293b;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.05);
+  font-size: 1rem;
+  border: 1px solid #e2e8f0;
+}
+
+.product-table th, .product-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  vertical-align: middle;
+  color: #1e293b;
+}
+
+.product-table th {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  color: #1e293b;
+}
+
+.product-table tr:last-child td {
+  border-bottom: none;
+}
+
+.product-table tr:hover td {
+  background: #f8fafc;
+  transition: background 0.2s;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+// Nút thao tác
+.btn-view {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+  margin-right: 8px;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+}
+
+.btn-add {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+}
+
+.btn-edit {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  margin-right: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  }
+}
+
+.btn-delete {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.2);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-right: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  }
+}
+
+.btn-cancel {
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(100, 116, 139, 0.2);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+  }
+}
+
+// Input tìm kiếm
+.search-input {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  color: #1e293b;
+  font-size: 1rem;
+  width: 250px;
+  transition: all 0.3s ease;
+  
+  &:focus {
+  outline: none;
+    border-color: #6366f1;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  }
+  
+  &::placeholder {
+    color: #94a3b8;
+  }
+}
+
+.form-edit-category {
+  background: #ffffff;
+  padding: 32px 32px 24px 32px;
+  border-radius: 16px;
+  margin-bottom: 32px;
+  min-width: 480px;
+  max-width: fit-content;
+  width: 100%;
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.08);
+  font-size: 1.15rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  border: 1px solid #e2e8f0;
+}
+
+.form-edit-category h3 {
+  font-size: 1.4rem;
+  margin-bottom: 18px;
+  color: #6366f1;
+  max-width: 213px;
+  font-weight: 700;
+}
+
+.form-edit-category label {
+  font-weight: 500;
+  font-size: 1.08rem;
+  color: #1e293b;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-edit-category input[type="text"] {
+  padding: 10px 14px;
+  font-size: 1.08rem;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  color: #1e293b;
+  margin-top: 6px;
+  transition: all 0.3s ease;
+
+  &:focus {
+  outline: none;
+    border-color: #6366f1;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  }
+}
+
+.form-edit-category .btn-save,
+.form-edit-category .btn-cancel {
+  min-width: 90px;
+  font-size: 1.08rem;
+  margin-right: 10px;
+}
+
+.form-edit-category textarea {
+  padding: 10px 14px;
+  font-size: 1.08rem;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  color: #1e293b;
+  margin-top: 6px;
+  transition: all 0.3s ease;
+  min-height: 80px;
+  resize: vertical;
+  
+  &:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  }
+}
+
+.form-view-mode {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%) !important;
+  border: 2px solid #e2e8f0;
+  
+  input, textarea {
+    background: #ffffff !important;
+    border-color: #cbd5e1 !important;
+    color: #64748b !important;
+    cursor: not-allowed;
+  }
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 1rem;
+}
+
+.pagination-info {
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0 1rem;
+}
+
+.pagination-btn {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+  
+  &:disabled {
+    background: #cbd5e1;
+    color: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+    opacity: 0.6;
+}
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+}

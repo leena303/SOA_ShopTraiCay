@@ -1,0 +1,61 @@
+<!-- <app-header></app-header> -->
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 offset-md-3">
+      <div class="register-form mx-auto">
+        <h2 class="register-header">Đăng ký</h2>
+        
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" class="form-control" id="email" [(ngModel)]="email" required placeholder="Nhập email của bạn" />
+        </div>
+
+        <div class="form-group">
+          <label for="username">Tên đăng nhập (Username)</label>
+          <input type="text" class="form-control" id="username" [(ngModel)]="username" required placeholder="Nhập tên đăng nhập" />
+        </div>
+
+        <div class="form-group password-field">
+          <label for="password">Mật khẩu</label>
+          <input
+            type="password"
+            placeholder="Ít nhất 3 ký tự"
+            class="form-control"
+            id="password"
+            [(ngModel)]="password"
+            required
+          />
+          <i class="password-toggle fas fa-eye-slash" (click)="togglePasswordVisibility('password')"></i>
+        </div>
+
+        <div class="form-group password-field">
+          <label for="confirmPassword">Gõ lại mật khẩu</label>
+          <input
+            type="password"
+            placeholder="Ít nhất 3 ký tự"
+            class="form-control"
+            id="confirmPassword"
+            [(ngModel)]="confirmPassword"
+            required
+          />
+          <i class="password-toggle fas fa-eye-slash" (click)="togglePasswordVisibility('confirmPassword')"></i>
+        </div>
+
+        <div class="form-group form-check checkbox-text">
+          <input type="checkbox" class="form-check-input" id="agree" [(ngModel)]="agreeTerms" required />
+          <label class="form-check-label text-start" for="agree">Tôi đồng ý với các điều kiện</label>
+        </div>
+
+        <button type="button" class="register-button" (click)="onRegister()">Đăng ký</button>
+        <div class="divider"></div>
+        <p class="text-center">
+          Bạn đã có tài khoản?<span>
+            <a [routerLink]="['/login']" class="register-link">Đăng nhập</a></span>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+<app-footer></app-footer>
+  
+  

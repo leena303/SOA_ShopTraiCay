@@ -1,0 +1,133 @@
+<div class="admin-layout">
+  <div class="payment-list-content">
+    <h3>Quản lý Thanh toán</h3>
+    
+    <!-- Statistics Card -->
+    <div class="statistics-card" *ngIf="statistics">
+      <h4>Thống kê Thanh toán</h4>
+      <div class="stats-grid">
+        <div class="stat-item">
+          <span class="stat-label">Tổng số thanh toán:</span>
+          <span class="stat-value">{{ statistics.total_payments || 0 }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Tổng tiền:</span>
+          <span class="stat-value">{{ formatCurrency(statistics.total_amount || 0) }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Đã thanh toán:</span>
+          <span class="stat-value">{{ statistics.completed_count || 0 }}</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Chờ xử lý:</span>
+          <span class="stat-value">{{ statistics.pending_count || 0 }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <div class="filters-section">
+      <div class="filter-group">
+        <label>Trạng thái:</label>
+        <select [(ngModel)]="statusFilter" class="filter-input">
+          <option value="">Tất cả</option>
+          <option value="pending">Chờ xử lý</option>
+          <option value="completed">Đã thanh toán</option>
+          <option value="cancelled">Đã hủy</option>
+          <option value="failed">Thất bại</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>Từ ngày:</label>
+        <input type="date" [(ngModel)]="dateFrom" class="filter-input" />
+      </div>
+      <div class="filter-group">
+        <label>Đến ngày:</label>
+        <input type="date" [(ngModel)]="dateTo" class="filter-input" />
+      </div>
+      <div class="filter-actions">
+        <button (click)="applyFilters()" class="btn-apply">Áp dụng</button>
+        <button (click)="clearFilters()" class="btn-clear">Xóa bộ lọc</button>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-section">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Tìm kiếm theo ID, mã đơn, phương thức..."
+        class="search-input"
+      />
+    </div>
+
+    <!-- Payments Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Mã đơn hàng</th>
+          <th>Phương thức</th>
+          <th>Số tiền</th>
+          <th>Trạng thái</th>
+          <th>Ngày tạo</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let payment of pagedPayments">
+          <td>{{ payment.id || payment.payment_id }}</td>
+          <td>{{ payment.order_id }}</td>
+          <td>{{ payment.payment_method || 'Chưa xác định' }}</td>
+          <td>{{ formatCurrency(payment.amount) }}</td>
+          <td style="position: relative;">
+            <button 
+              (click)="showActionMenu(payment)"
+              [ngClass]="getStatusClass(payment.status)">
+              {{ getStatusLabel(payment.status) }}
+            </button>
+            <div *ngIf="payment === processingPayment" class="status-menu">
+              <button (click)="confirmPayment(payment)" *ngIf="payment.status === 'pending'">Xác nhận</button>
+              <button (click)="cancelPayment(payment)" *ngIf="payment.status === 'pending'">Hủy</button>
+              <button (click)="processingPayment = null">Đóng</button>
+            </div>
+          </td>
+          <td>{{ (payment.created_at || payment.createdAt) | date:'short' }}</td>
+          <td>
+            <div class="action-buttons">
+              <button (click)="viewPaymentDetail(payment)" class="btn-view">Xem chi tiết</button>
+              <button (click)="deletePayment(payment)" class="btn-delete">Xóa</button>
+            </div>
+          </td>
+        </tr>
+        <tr *ngIf="pagedPayments.length === 0">
+          <td colspan="7" class="no-data">Không có dữ liệu thanh toán</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Pagination -->
+    <div class="pagination" *ngIf="totalPages > 1">
+      <button class="pagination-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Trước</button>
+      <span class="pagination-info">Trang {{ currentPage }} / {{ totalPages }}</span>
+      <button class="pagination-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Sau</button>
+    </div>
+
+    <!-- Payment Detail Modal -->
+    <div *ngIf="selectedPayment" class="payment-detail-modal" (click)="selectedPayment = null">
+      <div class="payment-detail-content" (click)="$event.stopPropagation()">
+        <h3>Chi tiết Thanh toán #{{ selectedPayment.id || selectedPayment.payment_id }}</h3>
+        <div class="detail-info">
+          <p><b>Mã đơn hàng:</b> {{ selectedPayment.order_id }}</p>
+          <p><b>Phương thức thanh toán:</b> {{ selectedPayment.payment_method || 'Chưa xác định' }}</p>
+          <p><b>Số tiền:</b> {{ formatCurrency(selectedPayment.amount) }}</p>
+          <p><b>Trạng thái:</b> {{ getStatusLabel(selectedPayment.status) }}</p>
+          <p><b>Ngày tạo:</b> {{ (selectedPayment.created_at || selectedPayment.createdAt) | date:'short' }}</p>
+          <p *ngIf="selectedPayment.notes"><b>Ghi chú:</b> {{ selectedPayment.notes }}</p>
+          <p *ngIf="selectedPayment.transaction_id"><b>Mã giao dịch:</b> {{ selectedPayment.transaction_id }}</p>
+        </div>
+        <button (click)="selectedPayment = null" class="btn-close">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>

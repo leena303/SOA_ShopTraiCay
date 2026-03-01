@@ -1,0 +1,18 @@
+/* Global App Styles - Force White Background */
+:host {
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background: #ffffff !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Force white background on all pages */
+router-outlet + * {
+  background: #ffffff !important;
+  min-height: 100vh;
+}
+

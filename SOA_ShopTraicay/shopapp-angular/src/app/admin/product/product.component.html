@@ -1,0 +1,167 @@
+<div class="admin-layout">
+
+  <div class="content">
+    <div class="content-header">Quản lý sản phẩm</div>
+    <div class="content-body">
+      <!-- PHẦN TÌM KIẾM -->
+      <div style="margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center;">
+        <input type="text" [(ngModel)]="searchText" placeholder="Tìm kiếm sản phẩm..." class="search-input" />
+        <!-- Nút thêm sản phẩm sẽ nằm bên phải -->
+        <button class="btn btn-add" (click)="addProduct()">+ Thêm sản phẩm</button>
+      </div>
+      <!-- KẾT THÚC PHẦN TÌM KIẾM -->
+      <!-- PHẦN FORM SỬA/THÊM SẢN PHẨM -->
+      <div *ngIf="editMode && editingProduct" class="form-edit-product">
+        <h3>{{ editingProduct.id ? 'Sửa sản phẩm' : 'Thêm sản phẩm' }}</h3>
+        <div class="form-fields-grid">
+          <label class="form-field">
+            Tên sản phẩm:
+            <input [(ngModel)]="editingProduct.name" />
+          </label>
+          <label class="form-field">
+            Giá:
+            <input [(ngModel)]="editingProduct.price" type="number" />
+          </label>
+          <label class="form-field">
+            Danh mục trái cây:
+            <select [(ngModel)]="editingProduct.category">
+              <option value="">Chọn danh mục</option>
+              <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+            </select>
+          </label>
+          <label class="form-field">
+            Đơn vị tính:
+            <select [(ngModel)]="editingProduct.unit">
+              <option value="kg">kg</option>
+              <option value="thùng">thùng</option>
+              <option value="hộp">hộp</option>
+              <option value="túi">túi</option>
+            </select>
+          </label>
+          <label class="form-field">
+            Trạng thái:
+            <select [(ngModel)]="editingProduct.is_active">
+              <option [value]="true">Còn hàng</option>
+              <option [value]="false">Hết hàng</option>
+            </select>
+          </label>
+          <label class="form-field form-field-full">
+            Mô tả:
+            <textarea [(ngModel)]="editingProduct.description" rows="4"></textarea>
+          </label>
+          <label class="form-field">
+            Số lượng:
+            <input [(ngModel)]="editingProduct.quantity" type="number" min="0" />
+          </label>
+          <label class="form-field form-field-image">
+            Ảnh đại diện:
+            <input type="file" #fileInput class="file-input" (change)="onFileSelected($event)" accept=".jpg,.jpeg,.png,.webp,.gif" />
+            <div class="image-preview">
+              <img [src]="getFullImageUrl(editingProduct.image)" (click)="fileInput.click()" class="preview-image" 
+                   (error)="onImageError($event)" />
+              <button type="button" (click)="fileInput.click()" class="btn-upload-image">Chọn ảnh</button>
+            </div>
+          </label>
+          <label class="form-field form-field-image">
+            Ảnh chi tiết:
+            <input type="file" #multiFileInput multiple class="file-input" (change)="onMultiFileSelected($event)" accept=".jpg,.jpeg,.png,.webp,.gif" />
+            <button type="button" (click)="multiFileInput.click()" class="btn-upload-image">Chọn nhiều ảnh</button>
+            <div class="images-grid">
+              <ng-container *ngFor="let img of editingProduct.images; let i = index">
+                <div class="image-item">
+                  <img [src]="getFullImageUrl(img)" class="thumbnail-image"
+                       (error)="onImageError($event)">
+                  <button type="button" (click)="removeDetailImage(i)" class="btn-remove-image">×</button>
+                </div>
+              </ng-container>
+            </div>
+          </label>
+        </div>
+        <div style="margin-top: 10px;">
+          <button class="btn btn-save" type="button" (click)="saveEdit()">Lưu</button>
+          <button class="btn btn-cancel" type="button" (click)="cancelEdit()">Hủy</button>
+        </div>
+      </div>
+      <!-- KẾT THÚC PHẦN FORM -->
+
+      <!-- PHẦN BẢNG SẢN PHẨM -->
+      <table class="product-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Hình ảnh</th>
+            <th>Tên sản phẩm</th>
+            <th>Giá</th>
+            <th>Danh mục</th>
+            <th>Đơn vị</th>
+            <th>Số lượng</th>
+            <th>Trạng thái</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let product of pagedProducts">
+            <td>{{ product.id }}</td>
+            <td>
+              <img [src]="getFullImageUrl(product.image)" alt="{{product.name}}"
+                style="width: 50px; height: 50px; border-radius: 4px; object-fit: cover;"
+                (error)="onImageError($event)" />
+            </td>
+            <td>{{ product.name }}</td>
+            <td>{{ product.getFormattedPrice() }}</td>
+            <td>{{ product.category || '-' }}</td>
+            <td>{{ product.unit || 'kg' }}</td>
+            <td>{{ product.quantity || 0 }} {{ product.unit || 'kg' }}</td>
+            <td>
+              <span [style.color]="product.is_active ? '#4ade80' : '#ef4444'">
+                {{ product.is_active ? 'Còn hàng' : 'Hết hàng' }}
+              </span>
+            </td>
+            <td>
+              <div class="action-buttons">
+                <button class="btn btn-view" (click)="viewDetail(product)">Xem chi tiết</button>
+                <button class="btn btn-edit" (click)="editProduct(product.id)">Sửa</button>
+                <button class="btn btn-delete" (click)="deleteProduct(product.id)">Xóa</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- KẾT THÚC PHẦN BẢNG -->
+
+      <!-- PHẦN PHÂN TRANG -->
+      <div class="pagination-container">
+        <button class="pagination-btn" (click)="page = page - 1" [disabled]="page === 1">Trước</button>
+        <span class="pagination-info">Trang {{page}} / {{totalPages}}</span>
+        <button class="pagination-btn" (click)="page = page + 1" [disabled]="page === totalPages">Sau</button>
+      </div>
+      <!-- KẾT THÚC PHÂN TRANG -->
+
+      <!-- PHẦN MODAL XEM CHI TIẾT -->
+      <div class="modal-detail" *ngIf="viewingProduct" (click)="closeDetail()">
+        <div class="modal-content" (click)="$event.stopPropagation()">
+          <h2>Chi tiết sản phẩm</h2>
+          <div class="modal-body">
+            <img [src]="getFullImageUrl(viewingProduct.image)" alt="Ảnh sản phẩm" class="modal-img" 
+                 (error)="onImageError($event)" />
+            <div style="display:flex;gap:4px;margin:8px 0;">
+              <img *ngFor="let img of viewingProduct.images" [src]="getFullImageUrl(img)"
+                style="width:60px;height:60px;object-fit:cover;border:1px solid #ccc;"
+                (error)="onImageError($event)">
+            </div>
+            <div class="modal-info">
+              <p><b>Tên:</b> {{ viewingProduct.name }}</p>
+              <p><b>Giá:</b> {{ viewingProduct.price | number }} VNĐ</p>
+              <p><b>Danh mục:</b> {{ viewingProduct.category }}</p>
+              <p><b>Hãng:</b> {{ viewingProduct.trademark }}</p>
+              <p><b>Trạng thái:</b> {{ viewingProduct.status }}</p>
+              <p><b>Số lượng:</b> {{ viewingProduct.quantity }}</p>
+              <p class="description"><b>Mô tả:</b> {{ viewingProduct.description }}</p>
+            </div>
+
+          </div>
+          <!-- KẾT THÚC MODAL XEM CHI TIẾT -->
+
+        </div>
+      </div>
+    </div>

@@ -1,0 +1,316 @@
+/* Detail Product - Modern White Theme */
+.container {
+  color: #1e293b !important;
+  background: #ffffff !important;
+  padding: 2rem 1.25rem;
+  min-height: 100vh;
+}
+
+/* Ảnh lớn */
+.product-image {
+  border: 2px solid #e2e8f0;
+  background-color: #ffffff;
+  padding: 1rem;
+  border-radius: 16px;
+  max-height: 500px;
+  object-fit: contain;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Ảnh thumbnail */
+.thumbnail-image {
+  transition: transform 0.2s ease;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: #ffffff;
+  
+  &:hover {
+  transform: scale(1.05);
+    border-color: #6366f1;
+  }
+}
+
+.thumbnail-image.border-primary {
+  border: 2px solid #6366f1 !important;
+}
+
+/* Nút điều hướng ảnh */
+.carousel-control-prev,
+.carousel-control-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  border: 2px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: all 0.3s ease;
+  
+  &:hover {
+    background-color: #f8fafc;
+    border-color: #6366f1;
+  }
+}
+
+.carousel-control-prev {
+  left: 1rem;
+}
+
+.carousel-control-next {
+  right: 1rem;
+}
+
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  background-size: 70% 70%;
+  width: 24px;
+  height: 24px;
+  filter: invert(0%) brightness(0) contrast(200%);
+}
+
+/* Button style */
+.btn-primary {
+  background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+  border: none;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.875rem 2rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+  }
+}
+
+.btn-success {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+  color: #ffffff;
+  font-weight: 600;
+  padding: 0.875rem 2rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.4);
+  }
+}
+
+.quantity-selector {
+  margin-bottom: 1.5rem;
+  
+  .quantity-label {
+    display: block;
+    color: #1e293b;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+  }
+  
+  .input-group {
+    max-width: 200px;
+    margin-bottom: 0.5rem;
+  }
+  
+  .quantity-hint {
+    display: block;
+    color: #64748b;
+    font-size: 0.875rem;
+    margin-top: 0.25rem;
+  }
+}
+
+.input-group .btn,
+.input-group .form-control {
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  
+  &:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  }
+}
+
+.btn-primary:disabled,
+.btn-success:disabled {
+  background: #cbd5e1 !important;
+  color: #94a3b8 !important;
+  cursor: not-allowed;
+  opacity: 0.6;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Product Details Section */
+.product-details-section {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  margin-top: 3rem;
+}
+
+.section-title {
+  color: #1e293b;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  
+  i {
+    color: #6366f1;
+    font-size: 1.5rem;
+  }
+}
+
+.product-details-content {
+  color: #1e293b;
+}
+
+.product-description {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #475569;
+  margin-bottom: 2rem;
+  padding: 1.5rem;
+  background: #f8fafc;
+  border-radius: 12px;
+  border-left: 4px solid #6366f1;
+}
+
+.product-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: #6366f1;
+  }
+}
+
+.info-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  
+  i {
+    color: #6366f1;
+    margin-right: 0.5rem;
+  }
+}
+
+.info-value {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1e293b;
+  
+  &.in-stock {
+    color: #10b981;
+  }
+  
+  &.out-of-stock {
+    color: #ef4444;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-details-section {
+    padding: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  .section-title {
+    font-size: 1.25rem;
+  }
+  
+  .product-info-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .product-description {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+}
+
+/* Ẩn nút tăng/giảm trong input number */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Mô tả chi tiết */
+.product-description {
+  white-space: pre-line;
+  background: #f8fafc;
+  border-left: 4px solid #6366f1;
+  border-radius: 16px;
+  padding: 2rem;
+  margin-top: 2rem;
+  color: #1e293b !important;
+  font-size: 1.125rem;
+  line-height: 1.8;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e2e8f0;
+}
+
+/* Product Info */
+h1, h2, h3, h4, h5, h6 {
+  color: #1e293b !important;
+}
+
+p {
+  color: #64748b !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .product-image {
+    max-height: 350px;
+  }
+
+  .col-md-6 {
+    text-align: center;
+  }
+}

@@ -1,0 +1,166 @@
+<div class="admin-layout">
+  <div class="content dashboard-content">
+    <h2 class="dashboard-title">Trang tổng quan quản trị</h2>
+    <div class="dashboard-stats">
+      <div class="stat-card stat-order" [routerLink]="['/admin/orders']" style="cursor:pointer;">
+        <div class="stat-title">Tổng đơn hàng</div>
+        <div class="stat-value">{{ totalOrders }}</div>
+      </div>
+
+      <!-- Danh sách đơn hàng
+      <div *ngIf="showOrderList" class="order-list-modal">
+        <div class="order-list-content">
+          <h3>Danh sách đơn hàng</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Khách hàng</th>
+                <th>Ngày đặt</th>
+                <th>Tổng tiền</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let order of orders">
+                <td>{{ order.order_id }}</td>
+                <td>{{ order.customer_name }}</td>
+                <td>{{ order.order_date | date:'short' }}</td>
+                <td>{{ order.total_price | number }} VNĐ</td>
+                <td style="position: relative;">
+                  <button (click)="showStatusMenu(order)"
+                    [ngClass]="{'status-confirmed' : order.status === 'Đã xác nhận', 'status-cancelled': order.status === 'Đã hủy', 'status-pending': order.status === 'Đang xử lý'}">
+                    {{ order.status || 'Đang xử lý' }}
+                  </button>
+                  <div *ngIf="order === processingOrder" class="status-menu">
+                    <button (click)="updateOrderStatus(order, 'Đã xác nhận')" class="status-btn status-complete">Đã xác nhận</button>
+                    <button (click)="updateOrderStatus(order, 'Đã hủy')" class="status-btn status-cancel">Đã hủy</button>
+                    <button (click)="processingOrder = null">Đóng</button>
+                  </div>
+                </td>
+                <td>
+                  <button (click)="viewOrderDetail(order)">Xem chi tiết</button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <button (click)="showOrderList = false">Đóng</button>
+        </div>
+      </div> -->
+
+      <div *ngIf="selectedOrder" class="order-detail-modal" (click)="selectedOrder = null">
+        <div class="order-detail-content" (click)="$event.stopPropagation()">
+          <h3>Chi tiết đơn hàng #{{ selectedOrder.order_id }}</h3>
+          <p><b>Mã đơn hàng:</b> {{ selectedOrder.order_code }}</p>
+          <p><b>Khách hàng:</b> {{ selectedOrder.customer_name }}</p>
+          <p><b>Địa chỉ giao hàng:</b> {{ selectedOrder.shipping_address }}</p>
+          <p><b>Số điện thoại:</b> {{ selectedOrder.shipping_phone }}</p>
+          <b>Danh sách sản phẩm:</b>
+          <ul>
+            <li *ngFor="let item of selectedOrder.items">
+              {{ item.product_name }} - SL: {{ item.quantity }} - Giá: {{ item.price | number }} VNĐ
+            </li>
+          </ul>
+          <p><b>Ngày đặt:</b> {{ selectedOrder.order_date | date:'short' }}</p>
+          <p><b>Tổng tiền:</b> {{ selectedOrder.total_price | number }} VNĐ</p>
+          <p><b>Trạng thái:</b> {{ selectedOrder.status }}</p>
+          <button (click)="selectedOrder = null">Đóng</button>
+        </div>
+      </div>
+
+      <div class="stat-card stat-user" (click)="onShowUsers()" style="cursor: pointer;">
+        <div class="stat-title">Tổng người dùng</div>
+        <div class="stat-value">{{ totalUsers }}</div>
+      </div>
+
+      <!-- Danh sách người dùng -->
+      <div *ngIf="showUserList" class="user-list-modal">
+        <div class="user-list-content">
+          <h3>Danh sách người dùng</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tên người dùng</th>
+                <th>Email</th>
+                <th>Địa chỉ</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let user of users">
+                <td>{{ user.id }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.address }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <button (click)="showUserList = false">Đóng</button>
+        </div>
+      </div>
+
+
+
+      <!-- Thẻ thống kê số lượng còn hàng -->
+      <div class="stat-card stat-instock" (click)="onShowInStockCount()" style="cursor: pointer;">
+        <div class="stat-title">Còn hàng</div>
+        <div class="stat-value">{{ totalInStock }} </div>
+      </div>
+
+      <!-- Danh sách sản phẩm còn hàng -->
+      <div *ngIf="showInStockCount" class="user-list-modal">
+        <div class="user-list-content">
+          <h3>Danh sách sản phẩm còn hàng</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of inStockProducts">
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.quantity }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <button class="close-btn" (click)="showInStockCount = false">Đóng</button>
+        </div>
+      </div>
+
+      <div class="stat-card stat-outstock" (click)="onShowOutOfStockCount()" style="cursor: pointer;">
+        <div class="stat-title">Hết hàng</div>
+        <div class="stat-value">{{ totalOutStock }}</div>
+      </div>
+
+      <!-- Modal danh sách sản phẩm hết hàng -->
+      <div *ngIf="showOutOfStockCount" class="user-list-modal">
+        <div class="user-list-content">
+          <h3>Danh sách sản phẩm hết hàng</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Tên sản phẩm</th>
+                <th>Số lượng</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let product of outOfStockProducts">
+                <td>{{ product.id }}</td>
+                <td>{{ product.name }}</td>
+                <td>{{ product.quantity }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <button (click)="showOutOfStockCount = false">Đóng</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,623 @@
+/* Product Management - Modern Light Theme */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+    background: #ffffff !important;
+}
+
+.sidebar {
+    width: 240px;
+    color: #1e293b;
+    padding: 20px 0;
+    height: 100%;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border-right: 2px solid #e2e8f0;
+    box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-header {
+    padding: 0 20px 20px;
+    font-size: 20px;
+    font-weight: bold;
+    border-bottom: 2px solid #e2e8f0;
+    color: #1e293b;
+    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 20px;
+  margin: 4px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  color: #64748b;
+  font-weight: 500;
+  
+  &:hover {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    color: #6366f1;
+    transform: translateX(4px);
+}
+
+  &.active {
+    background: linear-gradient(135deg, #6366f1 0%, #ec4899 100%);
+    color: #ffffff !important;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    font-weight: 600;
+}
+}
+
+.content {
+    flex: 1;
+    background-color: #ffffff !important;
+    color: #1e293b !important;
+    overflow-y: auto;
+}
+
+.content-header {
+    color: #1e293b !important;
+    padding: 0 20px 20px;
+    margin-top: -9px;
+    border-bottom: 2px solid #e2e8f0;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.content-body {
+    padding: 20px;
+    background: #ffffff !important;
+}
+
+/* Product management table styles */
+.product-table {
+    overflow-y: auto;
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.product-table th,
+.product-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+    color: #1e293b;
+}
+
+.product-table th {
+    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.product-table tr:last-child td {
+    border-bottom: none;
+}
+
+.product-table tr:hover {
+    background: #f8fafc;
+}
+
+.btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-add {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: white;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+}
+
+.btn-edit {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    margin-right: 5px;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+}
+
+.btn-view {
+  background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+  margin-right: 8px;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+}
+}
+
+.btn-delete {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: white;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+}
+
+.action-buttons {
+    display: flex;
+}
+
+.admin-layout {
+    display: flex;
+    min-height: 100vh;
+    background: #ffffff !important;
+}
+
+.sidebar {
+    width: 240px;
+    padding: 20px 0;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+    border-right: 2px solid #e2e8f0;
+}
+
+.content {
+    flex: 1;
+    padding: 32px;
+    background: #ffffff !important;
+}
+
+.form-edit-product {
+    background-color: #ffffff;
+    color: #1e293b;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 16px;
+    padding: 28px 32px 20px 32px;
+    margin-bottom: 32px;
+    margin-top: 10px;
+    animation: dialogFadeIn 0.3s;
+    border: 1px solid #e2e8f0;
+}
+
+@keyframes dialogFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.form-edit-product h3 {
+    margin-bottom: 18px;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #6366f1;
+}
+
+.form-edit-product .form-fields-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.form-edit-product .form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    font-weight: 500;
+    color: #1e293b;
+    flex: 1 1 200px;
+}
+
+.form-edit-product .form-field-full {
+    flex: 1 1 100%;
+}
+
+.form-edit-product .form-field-image {
+    flex: 1 1 250px;
+}
+
+.form-edit-product input,
+.form-edit-product select,
+.form-edit-product textarea {
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    background: #f8fafc;
+    color: #1e293b;
+    font-size: 1rem;
+    margin-top: 2px;
+    margin-bottom: 4px;
+    outline: none;
+    transition: all 0.3s ease;
+    width: 100%;
+    font-family: inherit;
+}
+
+.form-edit-product textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.form-edit-product input:focus,
+.form-edit-product select:focus,
+.form-edit-product textarea:focus {
+    border-color: #6366f1;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.form-edit-product .image-preview {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-edit-product .preview-image {
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    cursor: pointer;
+    background: #f8fafc;
+    transition: all 0.3s ease;
+    
+    &:hover {
+        border-color: #6366f1;
+        transform: scale(1.05);
+    }
+}
+
+.form-edit-product .btn-upload-image {
+    background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+    width: fit-content;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    }
+}
+
+.form-edit-product .images-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.form-edit-product .image-item {
+    position: relative;
+    display: inline-block;
+}
+
+.form-edit-product .thumbnail-image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border: 2px solid #e2e8f0;
+    border-radius: 8px;
+    background: #f8fafc;
+}
+
+.form-edit-product .btn-remove-image {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    line-height: 20px;
+    padding: 0;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+    transition: all 0.3s ease;
+    
+    &:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+    }
+}
+
+.form-edit-product .file-input {
+    display: none;
+}
+
+.form-edit-product .btn-save {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff;
+    margin-right: 10px;
+    
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+}
+
+.form-edit-product .btn-cancel {
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    color: #fff;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(100, 116, 139, 0.3);
+}
+}
+
+/* Modal chi tiết sản phẩm */
+.modal-detail {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow: auto;
+  padding: 20px;
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  max-width: 800px;
+  width: 100%;
+  padding: 24px;
+  position: relative;
+  animation: slideIn 0.3s ease-out;
+  border: 1px solid #e2e8f0;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.modal-content h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #1e293b;
+  margin: 0 0 16px;
+  text-align: center;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.modal-img {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  margin: 0 auto;
+  display: block;
+}
+
+.modal-body > div[style*="display:flex"] {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.modal-body > div[style*="display:flex"] img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #e2e8f0;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.modal-body > div[style*="display:flex"] img:hover {
+  transform: scale(1.1);
+  border-color: #6366f1;
+}
+
+.modal-info {
+  background: #f8fafc;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.modal-info p {
+  margin: 8px 0;
+  font-size: 16px;
+  color: #1e293b;
+}
+
+.modal-info p b {
+  color: #1e293b;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+/* Đảm bảo mô tả hiển thị xuống dòng */
+.modal-info p.description {
+  white-space: pre-wrap;
+  line-height: 1.5;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.btn-close {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+  margin: 16px auto 0;
+  transition: all 0.3s ease;
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .modal-content {
+    max-width: 95%;
+    padding: 16px;
+  }
+
+  .modal-content h2 {
+    font-size: 20px;
+  }
+
+  .modal-img {
+    max-width: 100%;
+  }
+
+  .modal-info p {
+    font-size: 14px;
+  }
+
+  .modal-info p.description {
+    max-height: 150px;
+  }
+
+  .btn-close {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+}
+
+.search-input {
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  background: #f8fafc;
+  color: #1e293b;
+  font-size: 1rem;
+  width: 260px;
+  transition: all 0.3s ease;
+  
+  &:focus {
+    outline: none;
+    border-color: #6366f1;
+    background: #ffffff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+  }
+  
+  &::placeholder {
+    color: #94a3b8;
+  }
+}
+
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin: 2rem 0;
+  padding: 1rem;
+}
+
+.pagination-info {
+  color: #1e293b;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0 1rem;
+}
+
+.pagination-btn {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.2);
+  
+  &:disabled {
+    background: #cbd5e1;
+    color: #94a3b8;
+  cursor: not-allowed;
+  box-shadow: none;
+    opacity: 0.6;
+}
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+}

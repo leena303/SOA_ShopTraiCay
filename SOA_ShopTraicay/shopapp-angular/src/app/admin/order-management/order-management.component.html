@@ -1,0 +1,203 @@
+<div class="admin-layout">
+  <div class="order-list-content">
+    <div class="header-section">
+      <h3>Danh sách đơn hàng</h3>
+      <button (click)="showAddOrderForm()" class="btn-add-order">+ Thêm đơn hàng</button>
+    </div>
+    <!-- Ô tìm kiếm -->
+    <div class="search-container">
+      <input
+        type="text"
+        [(ngModel)]="searchText"
+        placeholder="Tìm kiếm theo tên khách, mã đơn, trạng thái..."
+        class="search-input"
+      />
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Mã đơn</th>
+          <th>Khách hàng</th>
+          <th>Ngày đặt</th>
+          <th>Tổng tiền</th>
+          <th>Trạng thái</th>
+          <th>Thao tác</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let order of pagedOrders">
+          <td>{{ order.id || order.order_id }}</td>
+          <td>{{ order.order_code || order.order_number }}</td>
+          <td>{{ order.customer_name }}</td>
+          <td>{{ (order.createdAt || order.created_at || order.order_date) | date:'short' }}</td>
+          <td>{{ (order.total_price || order.total_amount) | number }} VNĐ</td>
+          <td style="position: relative;">
+            <button (click)="showStatusMenu(order)"
+              [ngClass]="{'status-confirmed' : order.status === 'completed', 'status-cancelled': order.status === 'cancelled', 'status-pending': order.status === 'pending'}">
+              {{ getStatusLabel(order.status) }}
+            </button>
+            <div *ngIf="order === processingOrder" class="status-menu">
+              <button (click)="updateOrderStatus(order, 'completed')" class="status-btn status-complete">Đã xác nhận</button>
+              <button (click)="updateOrderStatus(order, 'cancelled')" class="status-btn status-cancel">Đã hủy</button>
+              <button (click)="updateOrderStatus(order, 'pending')" class="status-btn status-pending">Đang xử lý</button>
+              <button (click)="processingOrder = null" class="status-btn status-close">Đóng</button>
+            </div>
+          </td>
+          <td>
+            <div class="action-buttons">
+              <button (click)="viewOrderDetail(order)" class="btn-view">Xem chi tiết</button>
+              <button (click)="deleteOrder(order)" class="btn-delete">Xóa</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- PHÂN TRANG -->
+    <div class="pagination-container">
+      <button class="pagination-btn" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">Trước</button>
+      <span class="pagination-info">Trang {{currentPage}} / {{totalPages}}</span>
+      <button class="pagination-btn" (click)="goToPage(currentPage + 1)" [disabled]="currentPage === totalPages">Sau</button>
+    </div>
+
+  <!-- Chi tiết đơn hàng -->
+  <div *ngIf="selectedOrder" class="order-detail-modal" (click)="selectedOrder = null">
+    <div class="order-detail-content" (click)="$event.stopPropagation()">
+      <h3>Chi tiết đơn hàng #{{ selectedOrder.order_id }}</h3>
+      <p><b>Mã đơn hàng:</b> {{ selectedOrder.order_code }}</p>
+      <p><b>Khách hàng:</b> {{ selectedOrder.customer_name }}</p>
+      <p><b>Địa chỉ giao hàng:</b> {{ selectedOrder.shipping_address }}</p>
+      <p><b>Số điện thoại:</b> {{ selectedOrder.shipping_phone }}</p>
+      <b>Danh sách sản phẩm:</b>
+      <ul>
+        <li *ngFor="let item of selectedOrder.items">
+          {{ item.product_name }} - SL: {{ item.quantity }} - Giá: {{ item.price | number }} VNĐ
+        </li>
+      </ul>
+      <p><b>Ngày đặt:</b> {{ selectedOrder.order_date | date:'short' }}</p>
+      <p><b>Tổng tiền:</b> {{ selectedOrder.total_price | number }} VNĐ</p>
+      <p><b>Trạng thái:</b> {{ selectedOrder.status }}</p>
+      <button (click)="selectedOrder = null">Đóng</button>
+    </div>
+  </div>
+
+  <!-- Form thêm đơn hàng mới -->
+  <div *ngIf="showAddOrder" class="order-detail-modal" (click)="closeAddOrderForm()">
+    <div class="add-order-content" (click)="$event.stopPropagation()">
+      <h3>Thêm đơn hàng mới</h3>
+      
+      <form (ngSubmit)="submitNewOrder()" #orderForm="ngForm">
+        <!-- Thông tin khách hàng -->
+        <div class="form-section">
+          <h4>Thông tin khách hàng</h4>
+          
+          <div class="form-group">
+            <label>Chọn khách hàng (tùy chọn):</label>
+            <select [(ngModel)]="newOrder.customer_id" name="customer_id" class="form-control" (change)="onCustomerSelect()">
+              <option value="">-- Chọn khách hàng --</option>
+              <option *ngFor="let customer of customers" [value]="customer.id">
+                {{ customer.name }} ({{ customer.email }})
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Tên khách hàng <span class="required">*</span>:</label>
+            <input 
+              type="text" 
+              [(ngModel)]="newOrder.customer_name" 
+              name="customer_name" 
+              class="form-control"
+              required
+              placeholder="Nhập tên khách hàng"
+            />
+          </div>
+
+          <div class="form-group">
+            <label>Email khách hàng <span class="required">*</span>:</label>
+            <input 
+              type="email" 
+              [(ngModel)]="newOrder.customer_email" 
+              name="customer_email" 
+              class="form-control"
+              required
+              placeholder="Nhập email khách hàng"
+            />
+          </div>
+        </div>
+
+        <!-- Danh sách sản phẩm -->
+        <div class="form-section">
+          <h4>Danh sách sản phẩm</h4>
+          
+          <div class="product-list">
+            <div *ngFor="let item of newOrder.items; let i = index" class="product-item">
+              <div class="product-select">
+                <select [(ngModel)]="item.product_id" [name]="'product_' + i" class="form-control" required>
+                  <option value="">-- Chọn sản phẩm --</option>
+                  <option *ngFor="let product of products" [value]="product.id">
+                    {{ product.name }} - {{ product.price | number }} VNĐ/{{ product.unit }}
+                  </option>
+                </select>
+              </div>
+              <div class="quantity-input">
+                <label>Số lượng:</label>
+                <input 
+                  type="number" 
+                  [(ngModel)]="item.quantity" 
+                  [name]="'quantity_' + i"
+                  class="form-control"
+                  min="1"
+                  required
+                  (change)="calculateTotal()"
+                />
+              </div>
+              <button type="button" (click)="removeProductItem(i)" class="btn-remove-item">Xóa</button>
+            </div>
+          </div>
+
+          <button type="button" (click)="addProductItem()" class="btn-add-item">+ Thêm sản phẩm</button>
+        </div>
+
+        <!-- Thông tin thanh toán -->
+        <div class="form-section">
+          <h4>Thông tin thanh toán</h4>
+          
+          <div class="form-group">
+            <label>Phương thức thanh toán:</label>
+            <select [(ngModel)]="newOrder.payment_method" name="payment_method" class="form-control">
+              <option value="cash">Tiền mặt</option>
+              <option value="bank_transfer">Chuyển khoản</option>
+              <option value="card">Thẻ</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Ghi chú:</label>
+            <textarea 
+              [(ngModel)]="newOrder.notes" 
+              name="notes" 
+              class="form-control"
+              rows="3"
+              placeholder="Nhập ghi chú (nếu có)"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Tổng tiền -->
+        <div class="total-section">
+          <h4>Tổng tiền: <span class="total-amount">{{ calculateOrderTotal() | number }} VNĐ</span></h4>
+        </div>
+
+        <!-- Buttons -->
+        <div class="form-actions">
+          <button type="submit" class="btn-submit" [disabled]="!orderForm.valid || newOrder.items.length === 0">
+            Tạo đơn hàng
+          </button>
+          <button type="button" (click)="closeAddOrderForm()" class="btn-cancel">Hủy</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

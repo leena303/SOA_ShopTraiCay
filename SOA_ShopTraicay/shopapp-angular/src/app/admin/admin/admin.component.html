@@ -1,0 +1,38 @@
+<div class="admin-layout">
+  <div class="sidebar">
+    <div class="sidebar-header">Trang quản trị viên</div>
+    <div class="menu-items">
+      <a [routerLink]="['dashboard']" routerLinkActive="active" class="menu-item">
+        <i>📊</i>
+        <span>Thống kê</span>
+      </a>
+      <a [routerLink]="['products']" routerLinkActive="active" class="menu-item">
+        <i>📦</i>
+        <span>Quản lý Sản phẩm</span>
+      </a>
+      <a [routerLink]="['categories']" routerLinkActive="active" class="menu-item">
+        <i>📁</i>
+        <span>Quản lý Danh mục</span>
+      </a>
+      <a [routerLink]="['users']" routerLinkActive="active" class="menu-item">
+        <i>👥</i>
+        <span>Quản lý Người dùng</span>
+      </a>
+      <a [routerLink]="['orders']" routerLinkActive="active" class="menu-item">
+        <i>🛒</i>
+        <span>Quản lý Đơn hàng</span>
+      </a>
+      <a [routerLink]="['payments']" routerLinkActive="active" class="menu-item">
+        <i>💳</i>
+        <span>Quản lý Thanh toán</span>
+      </a>
+      <div class="menu-item" (click)="onLogout()">
+        <i>🚪</i>
+        <span>Đăng xuất</span>
+      </div>
+    </div>
+  </div>
+  <div class="admin-content">
+    <router-outlet></router-outlet>
+  </div>
+</div>

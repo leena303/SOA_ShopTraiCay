@@ -1,0 +1,84 @@
+<div class="page-wrapper">
+  <app-header></app-header>
+
+  <div class="order-history-container">
+    <div class="order-history-header">
+      <h1>Lịch sử đặt hàng</h1>
+      <button class="btn-refresh" (click)="loadOrders()" [disabled]="loading">
+        <i class="fas fa-sync-alt" [class.fa-spin]="loading"></i> {{ loading ? 'Đang tải...' : 'Làm mới' }}
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading" class="loading-state">
+      <div class="spinner"></div>
+      <p>Đang tải lịch sử đặt hàng...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error" class="error-state">
+      <i class="fas fa-exclamation-circle"></i>
+      <p>{{ error }}</p>
+    </div>
+
+    <!-- Orders List -->
+    <div *ngIf="!loading && !error" class="orders-list">
+      <div *ngIf="orders.length === 0" class="no-orders">
+        <i class="fas fa-shopping-bag"></i>
+        <p>Bạn chưa có đơn hàng nào</p>
+        <p style="font-size: 0.9rem; color: #64748b; margin-top: 10px;">
+          Nếu bạn vừa đặt hàng, vui lòng nhấn nút "Làm mới" ở trên để tải lại danh sách.
+        </p>
+        <a routerLink="/" class="btn-primary">Tiếp tục mua sắm</a>
+      </div>
+
+      <div *ngFor="let order of orders" class="order-card">
+        <div class="order-header">
+          <div class="order-info">
+            <h3>Đơn hàng #{{ order.id }}</h3>
+            <p class="order-code">Mã đơn: <b>{{ order.order_code }}</b></p>
+            <p class="order-date">{{ order.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+          <div class="order-status" [ngClass]="getStatusClass(order.status)">
+            {{ getStatusLabel(order.status) }}
+          </div>
+          <button class="btn btn-danger" 
+                  *ngIf="canCancelOrder(order)" 
+                  (click)="cancelOrder(order.id!)">
+            Hủy đơn
+          </button>
+        </div>
+
+        <div class="order-items">
+          <div *ngFor="let item of order.items" class="order-item">
+            <div class="product-image">
+              <img [src]="getItemImage(item)" 
+                   [alt]="getItemName(item)"
+                   (error)="onImageError($event)">
+            </div>
+            <div class="item-details">
+              <h4>{{ getItemName(item) }}</h4>
+              <div class="item-price-quantity">
+                <p class="item-price">{{ getItemPrice(item) | number }} VNĐ</p>
+                <p class="item-quantity">Số lượng: {{ getItemQuantity(item) }}</p>
+              </div>
+              <p class="item-total">Thành tiền: {{ (getItemPrice(item) * getItemQuantity(item)) | number }} VNĐ</p>
+            </div>
+          </div>
+          <div *ngIf="!order.items || order.items.length === 0" class="no-items">
+            <p>Không có sản phẩm trong đơn hàng này</p>
+          </div>
+        </div>
+
+        <div class="order-footer">
+          <div class="order-total">
+            <span>Tổng tiền đơn hàng:</span>
+            <strong>{{ order.total_price | number }} VNĐ</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <app-footer></app-footer>
+</div>
