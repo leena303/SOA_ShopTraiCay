@@ -1,0 +1,28 @@
+{
+  "name": "product-service",
+  "version": "1.0.0",
+  "description": "Product Management Service - Bài thực hành số 3",
+  "main": "server-standalone.js",
+  "scripts": {
+    "start": "node server-standalone.js",
+    "dev": "nodemon server-standalone.js"
+  },
+  "keywords": [
+    "product",
+    "service",
+    "soa",
+    "restful-api"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mysql2": "^3.6.5",
+    "dotenv": "^16.3.1",
+    "cors": "^2.8.5",
+    "body-parser": "^1.20.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  }
+}
